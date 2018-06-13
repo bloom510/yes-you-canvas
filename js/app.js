@@ -3,6 +3,10 @@ class Canvas {
         this.global = {}; 
         this.width = width;
         this.height = height;
+        this.freehand = {
+            draw_history: [],
+            mousedown: false
+        }
         this.context, this.namespace;
         
     }
@@ -14,23 +18,58 @@ class Canvas {
         canvas.height = this.height;
         document.body.appendChild(canvas);
         this.context = canvas.getContext('2d');
-        this.setup();
+        this.setup({
+            strokeStyle: 'white',
+            fillStyle: 'black',
+            lineCap: 'round',
+            lineWidth: '6'
+        });
+        this.getMousePos();
     } 
 
-    setup(parameters){
-        //code setup to accept an object containing parameters
-        this.context.strokeStyle = 'white';
-        this.context.fillStyle = 'black';
-        this.context.lineCap = 'round'
+    setup(params){
+        this.context.strokeStyle = params.strokeStyle;
+        this.context.fillStyle = params.fillStyle;
+        this.context.lineCap = params.lineCap;
+        this.context.lineWidth = params.lineWidth;
         this.context.fillRect(0, 0, this.width, this.height);
     }
 
-    //for linework or doodles. can theoretically be made to pick up mouse coordinates, so test that.
+    getMousePos(){
+        const canvas = document.getElementById('canvas')
+        const rect = canvas.getBoundingClientRect();
+
+        canvas.addEventListener('mousedown', (e) => {
+            this.freehand.mousedown = true;
+            if (this.freehand.mousedown){
+                this.freehand.mouseup = true;
+            }
+            // below creates a happy accident. you could generate some dope art by refining the n-gon generator and enabling mouse interactivity
+            // this.polygon(this.draw_history)
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            this.freehand.mousedown = false;
+        })
+
+        canvas.addEventListener('mousemove', (e) => {
+            if(this.freehand.mousedown){
+                this.paint({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+            }
+        });
+    }
+
+    paint(coords){
+        this.context.lineTo(coords.x, coords.y)
+        this.context.stroke()
+    }
+
+    //generates shape for a given array of vertices. 
     //try and code up a n-gon generator.
-    draw(vertices){      
+    polygon(vertices){      
         const context = this.context;
         context.beginPath();
-    
+
         for (let i = 0; i < vertices.length; i++){
             for(let j = 0; j < Object.keys(vertices[i]).length; j += 2){
                 if(i === 0){
