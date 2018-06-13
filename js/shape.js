@@ -40,14 +40,15 @@ class Shape {
     //Enlarges or reduces to scale for any Polygon given its centroid
     updateRadius(scale){
         const C = this.computeCentroid()
-
         const clearPrevious = (coords) => {
             this.context.strokeStyle = 'black'
-            this.context.arc(this.polarSpace.vertices[coords].x, this.polarSpace.vertices[coords].y, 0.5, 0, Math.PI * 2)
+            this.context.beginPath();
+            this.context.arc(this.polarSpace.vertices[coords].x, this.polarSpace.vertices[coords].y, 1.5, 0, Math.PI * 2)
             this.context.stroke()
+            this.context.closePath();
         }
 
-        const update = (coords) => {
+        const update = (coords) => {          
             this.context.strokeStyle = 'white'
             this.polarSpace.vertices[coords].x = scale * (this.polarSpace.vertices[coords].x - C.x) + C.x;
             this.polarSpace.vertices[coords].y = scale * (this.polarSpace.vertices[coords].y - C.y) + C.y;

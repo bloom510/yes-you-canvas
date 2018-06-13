@@ -41,6 +41,7 @@ class Canvas {
         canvas.addEventListener('mousedown', (e) => {
             this.context.moveTo(e.clientX - rect.left, e.clientY - rect.top)
             this.freehand.mousedown = true;
+            
             this.newShape(e.clientX - rect.left, e.clientY - rect.top)
         });
 
