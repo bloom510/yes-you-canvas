@@ -9,6 +9,11 @@ class Shape {
         if(!this.canvas) this.canvas = canvas;
 
         this.polarSpace = {
+            dot: function(x, y, radius){
+                this.radius = radius;
+                this.x = x;
+                this.y = y;
+            },
             radius: radius,
             x: x,
             y: y,
@@ -27,8 +32,8 @@ class Shape {
             let x = Math.round(this.polarSpace.x + this.polarSpace.radius * Math.cos(radianAngle));
             let y = Math.round(this.polarSpace.y + this.polarSpace.radius * Math.sin(radianAngle));
       
-            
-            this.polarSpace.vertices.push({x, y});
+            let dot = new this.polarSpace.dot(x, y, 50)
+            this.polarSpace.vertices.push(dot);
           }
 
           for(let j = 0; j < this.polarSpace.vertices.length; j++){
@@ -43,8 +48,9 @@ class Shape {
         const clearPrevious = (coords) => {
             this.context.strokeStyle = 'black'
             this.context.beginPath();
-            this.context.arc(this.polarSpace.vertices[coords].x, this.polarSpace.vertices[coords].y, 1.5, 0, Math.PI * 2)
-            this.context.stroke()
+            this.context.clearRect(0, 0, window.innerWidth, window.innerHeight)
+            this.context.fillRect(0, 0, window.innerWidth, window.innerHeight);
+            this.context.fill()   
             this.context.closePath();
         }
 

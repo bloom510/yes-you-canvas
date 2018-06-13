@@ -41,8 +41,8 @@ class Canvas {
         canvas.addEventListener('mousedown', (e) => {
             this.context.moveTo(e.clientX - rect.left, e.clientY - rect.top)
             this.freehand.mousedown = true;
-            
-            this.newShape(e.clientX - rect.left, e.clientY - rect.top)
+            //do stuff
+            // this.createShape(e.clientX - rect.left, e.clientY - rect.top)
         });
 
         canvas.addEventListener('mouseup', () => {
@@ -52,7 +52,9 @@ class Canvas {
         canvas.addEventListener('mousemove', (e) => {
             if(this.freehand.mousedown){
                 //have getMousePos() consume specific actions to decide which drawing modes to call
-                this.global.shape.updateRadius(1.01)
+                //aka do stuff
+
+                // this.global.shape.updateRadius(1.01)
                 // this.paint({ x: e.clientX - rect.left, y: e.clientY - rect.top });
             }
         });
@@ -63,7 +65,7 @@ class Canvas {
         this.context.stroke()
     }
 
-    newShape(x, y){
+    createShape(x, y){
         this.global.shape = new Shape(this.context, x, y, 50)
     }
 
