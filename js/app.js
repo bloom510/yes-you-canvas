@@ -40,10 +40,8 @@ class Canvas {
         const rect = canvas.getBoundingClientRect();
 
         canvas.addEventListener('mousedown', (e) => {
+            this.context.moveTo(e.clientX - rect.left, e.clientY - rect.top)
             this.freehand.mousedown = true;
-            if (this.freehand.mousedown){
-                this.freehand.mouseup = true;
-            }
             // below creates a happy accident. you could generate some dope art by refining the n-gon generator and enabling mouse interactivity
             // this.polygon(this.draw_history)
         });
