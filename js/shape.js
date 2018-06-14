@@ -8,10 +8,12 @@ class Shape {
         if(!this.context) this.context = context;
         if(!this.canvas) this.canvas = canvas;
         this.name = name;
+        
 
         this.polarSpace = {
-            dot: function(x, y, radius){
+            node: function(x, y, radius){
                 this.radius = radius;
+                this.diameter = 2*this.radius;
                 this.x = x;
                 this.y = y;
             },
@@ -21,8 +23,29 @@ class Shape {
             vertices: []
         }
         this.createPolarSpace()
+        
     }
+    createContainer(){
+        const C = this.computeCentroid()
+        const diameter = (this.polarSpace.radius * 2)
+        const x = C.x - this.polarSpace.radius;
+        const y = C.y - this.polarSpace.radius;
+        
+        this.context.moveTo(x, y)
+        this.context.lineTo(x + diameter, y)
 
+        this.context.moveTo(x, y + diameter)
+        this.context.lineTo(x, y)
+
+        this.context.moveTo(x + diameter, y + diameter)
+        this.context.lineTo(x, y + diameter)
+        
+        this.context.moveTo(x + diameter, y + diameter)
+        this.context.lineTo(x + diameter, y)
+         
+         this.context.stroke()
+
+    }
     //Creates nodes along the perimeter of a circle so we can subdivide and thus circumscribe polygons
     createPolarSpace(){
         for (let i = 0; i < 12; i++) {
@@ -32,18 +55,20 @@ class Shape {
             let x = Math.round(this.polarSpace.x + this.polarSpace.radius * Math.cos(radianAngle));
             let y = Math.round(this.polarSpace.y + this.polarSpace.radius * Math.sin(radianAngle));
       
-            let dot = new this.polarSpace.dot(x, y, 50)
-            this.polarSpace.vertices.push(dot);
+            let node = new this.polarSpace.node(x, y, 50)
+            this.polarSpace.radius = 50;
+            this.polarSpace.vertices.push(node);
           }
 
           for(let j = 0; j < this.polarSpace.vertices.length; j++){
             this.plotDot(this.polarSpace.vertices[j].x, this.polarSpace.vertices[j].y);
+            
           }
 
     }
     
     //Updates the radius of our polar space
-    updateRadius(scale){
+    updateRadius(scale){ 
         console.log('rad upd')
         const C = this.computeCentroid()
 
@@ -60,6 +85,8 @@ class Shape {
             this.context.strokeStyle = 'white'
             this.polarSpace.vertices[coords].x = scale * (this.polarSpace.vertices[coords].x - C.x) + C.x;
             this.polarSpace.vertices[coords].y = scale * (this.polarSpace.vertices[coords].y - C.y) + C.y;
+            this.polarSpace.radius = this.polarSpace.radius * scale;
+            this.polarSpace.diameter = this.polarSpace.diameter * scale;
         }
         
         //update dimensions in memory
@@ -71,7 +98,9 @@ class Shape {
         //re-plot dots
         for(let j = 0; j < this.polarSpace.vertices.length; j++){
             this.plotDot(this.polarSpace.vertices[j].x, this.polarSpace.vertices[j].y);
+                                    
         }
+        
        
     }
 
@@ -80,6 +109,7 @@ class Shape {
         this.context.arc(x, y, 0.5, 0, Math.PI * 2);
         this.context.stroke();
         this.context.closePath();
+        
       }
 
     //Computes the center of an n-gon. Should be tested on a variety of polygons to determine algorithm choice

@@ -1,3 +1,4 @@
+//TODO: change scaling algorithm to respond to dragging the corner of the square, computing the new circle's radius via the square's area
 class Canvas {
     constructor(width, height) {
         this.global = {}; 
@@ -22,7 +23,7 @@ class Canvas {
             strokeStyle: 'white',
             fillStyle: 'black',
             lineCap: 'round',
-            lineWidth: '6'
+            lineWidth: '1'
         });
         this.getMousePos();
     } 
@@ -71,7 +72,8 @@ class Canvas {
     }
 
     newShape(x, y){
-        this.global.shape = new Shape(this.context, x, y, 10)
+        this.global.shape = new Shape(this.context, x, y, 50)
+        this.global.shape.createContainer()
     }
 
 }
