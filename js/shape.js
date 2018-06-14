@@ -4,9 +4,10 @@ that works by circumscribing a circle with a radius determined
 by mouse distance.
 */
 class Shape {
-    constructor(context, x, y, radius){
+    constructor(context, x, y, radius, name){
         if(!this.context) this.context = context;
         if(!this.canvas) this.canvas = canvas;
+        this.name = name;
 
         this.polarSpace = {
             dot: function(x, y, radius){
@@ -19,15 +20,14 @@ class Shape {
             y: y,
             vertices: []
         }
-
         this.createPolarSpace()
-
     }
 
+    //Creates nodes along the perimeter of a circle so we can subdivide and thus circumscribe polygons
     createPolarSpace(){
         for (let i = 0; i < 12; i++) {
             let interval = (Math.PI * 2) / 12;
-            let radianAngle = interval * (i + 9);
+            let radianAngle = interval * (i + 10);
       
             let x = Math.round(this.polarSpace.x + this.polarSpace.radius * Math.cos(radianAngle));
             let y = Math.round(this.polarSpace.y + this.polarSpace.radius * Math.sin(radianAngle));
@@ -42,9 +42,11 @@ class Shape {
 
     }
     
-    //Enlarges or reduces to scale for any Polygon given its centroid
+    //Updates the radius of our polar space
     updateRadius(scale){
+        console.log('rad upd')
         const C = this.computeCentroid()
+
         const clearPrevious = (coords) => {
             this.context.strokeStyle = 'black'
             this.context.beginPath();
@@ -80,7 +82,7 @@ class Shape {
         this.context.closePath();
       }
 
-          //Compputes the center of an n-gon. Should be tested on a variety of polygons to determine algorithm choice
+    //Computes the center of an n-gon. Should be tested on a variety of polygons to determine algorithm choice
     computeCentroid(){
         let sumX = 0, sumY = 0, i = 0;
         for(i; i < this.polarSpace.vertices.length; i++){
@@ -98,6 +100,10 @@ class Shape {
         context.arc(C.x,C.y,3,0,2*Math.PI);
         context.fill();
         context.closePath();
+    }
+
+    ngon(){
+        console.log('n-gon generator goes here')
     }
  
 
