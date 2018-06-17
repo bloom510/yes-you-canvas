@@ -51,8 +51,8 @@ class Shape {
     }
     //Creates nodes along the perimeter of a circle so we can subdivide and thus circumscribe polygons
     createPolarSpace(radius){
-        for (let i = 0; i < 12; i++) {
-            let interval = (Math.PI * 2) / 12;
+        for (let i = 0; i < 18; i++) {
+            let interval = (Math.PI * 2) / 18;
             let radianAngle = interval * (i + 10);
       
             let x = Math.round(this.polarSpace.x + this.polarSpace.radius * Math.cos(radianAngle));
