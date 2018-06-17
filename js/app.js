@@ -4,10 +4,13 @@ class Canvas {
         this.global = {}; 
         this.width = width;
         this.height = height;
-        this.freehand = {
-            draw_history: [],
-            mousedown: false
-        }
+        this.mouse = {
+                down: false,
+                prevX: 0,
+                prevY: 0,
+                x: 0,
+                y: 0
+            }
         this.context, this.namespace;
   
     }
@@ -23,7 +26,7 @@ class Canvas {
             strokeStyle: 'white',
             fillStyle: 'black',
             lineCap: 'round',
-            lineWidth: '1'
+            lineWidth: '0.5'
         });
         this.getMousePos();
     } 
@@ -36,30 +39,43 @@ class Canvas {
         this.context.fillRect(0, 0, this.width, this.height);
     }
 
+    getDistance(x1, y1, x2, y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) - Math.pow(y2 - y1, 2))
+    }
+
     getMousePos(){
         const canvas = document.getElementById('canvas')
         const rect = canvas.getBoundingClientRect();
         let x, y, dist;
         
         canvas.addEventListener('mousedown', (e) => {
-            x = e.clientX - rect.left;
-            y = e.clientY - rect.top;
+
+            this.mouse.prevX = x;
+            this.mouse.prevY = y;
+
             this.context.moveTo(x, y)
-            this.freehand.mousedown = true;
+            this.mouse.down = true;
             this.newShape(x, y)
         });
 
         canvas.addEventListener('mouseup', () => {
-            this.freehand.mousedown = false;
+            this.mouse.down = false;
         })
 
         canvas.addEventListener('mousemove', (e) => {
-            if(this.freehand.mousedown){
-                // Math.max(min, Math.min(number, max));
-                // dist = (Math.pow((e.clientX - rect.left) - x, 2) + Math.pow((e.clientY - rect.left) - y, 2) / this.width)
-                // console.log(dist)
-                (e.clientX - rect.left) >= x ? 
-                this.global.shape.updateRadius(1.03) : this.global.shape.updateRadius(.9)
+            x = e.clientX - rect.left;
+            y = e.clientY - rect.top;
+
+            if(this.mouse.down){
+               this.mouse.x = x;
+               this.mouse.y = y;
+               console.log('draggin')
+               let dist = this.getDistance(this.mouse.prevX, this.mouse.prevY, x, y);
+               this.global.shape.updateRadius(dist)
+
+                // console.log(this.getDistance(x, y, ))
+                // (e.clientX - rect.left) >= x ? 
+                // this.global.shape.updateRadius(1.03) : this.global.shape.updateRadius(.9)
 
                 // this.paint({ x: e.clientX - rect.left, y: e.clientY - rect.top });
             }
@@ -72,8 +88,7 @@ class Canvas {
     }
 
     newShape(x, y){
-        this.global.shape = new Shape(this.context, x, y, 50)
-        this.global.shape.createContainer()
+        this.global.shape = new Shape(this.context, x - 50, y - 50, 50)
     }
 
 }

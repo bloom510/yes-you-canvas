@@ -22,11 +22,14 @@ class Shape {
             y: y,
             vertices: []
         }
-        this.createPolarSpace()
+        this.createPolarSpace(50)
+        this.createContainer()
         
     }
+    //draws a square around our circle
     createContainer(){
         const C = this.computeCentroid()
+        console.log(this.polarSpace.radius)
         const diameter = (this.polarSpace.radius * 2)
         const x = C.x - this.polarSpace.radius;
         const y = C.y - this.polarSpace.radius;
@@ -47,7 +50,7 @@ class Shape {
 
     }
     //Creates nodes along the perimeter of a circle so we can subdivide and thus circumscribe polygons
-    createPolarSpace(){
+    createPolarSpace(radius){
         for (let i = 0; i < 12; i++) {
             let interval = (Math.PI * 2) / 12;
             let radianAngle = interval * (i + 10);
@@ -56,24 +59,24 @@ class Shape {
             let y = Math.round(this.polarSpace.y + this.polarSpace.radius * Math.sin(radianAngle));
       
             let node = new this.polarSpace.node(x, y, 50)
-            this.polarSpace.radius = 50;
+            this.polarSpace.radius = radius;
             this.polarSpace.vertices.push(node);
           }
 
           for(let j = 0; j < this.polarSpace.vertices.length; j++){
             this.plotDot(this.polarSpace.vertices[j].x, this.polarSpace.vertices[j].y);
-            
           }
 
     }
+
+  
     
     //Updates the radius of our polar space
-    updateRadius(scale){ 
-        console.log('rad upd')
+    updateRadius(distance){ 
         const C = this.computeCentroid()
 
+        // clears canvas and refills with the backgroundcolor
         const clearPrevious = (coords) => {
-            this.context.strokeStyle = 'black'
             this.context.beginPath();
             this.context.clearRect(0, 0, window.innerWidth, window.innerHeight)
             this.context.fillRect(0, 0, window.innerWidth, window.innerHeight);
@@ -81,25 +84,32 @@ class Shape {
             this.context.closePath();
         }
 
-        const update = (coords) => {          
+        //Updates the circle's radius
+        const update = (coords) => {    
+            console.log(distance)      
             this.context.strokeStyle = 'white'
-            this.polarSpace.vertices[coords].x = scale * (this.polarSpace.vertices[coords].x - C.x) + C.x;
-            this.polarSpace.vertices[coords].y = scale * (this.polarSpace.vertices[coords].y - C.y) + C.y;
-            this.polarSpace.radius = this.polarSpace.radius * scale;
-            this.polarSpace.diameter = this.polarSpace.diameter * scale;
-        }
-        
-        //update dimensions in memory
-        for(let i = 0; i < this.polarSpace.vertices.length; i++){
-            clearPrevious(i)
-            update(i)
+
+            // this.polarSpace.radius += this.polarSpace.radius / distance;
+            this.createPolarSpace(distance)
+
+
+            // this.polarSpace.vertices[coords].x = (scale * (this.polarSpace.vertices[coords].x - C.x) + C.x);
+            // this.polarSpace.vertices[coords].y = (scale * (this.polarSpace.vertices[coords].y - C.y) + C.y);
+            
+            this.createContainer()
         }
 
-        //re-plot dots
-        for(let j = 0; j < this.polarSpace.vertices.length; j++){
-            this.plotDot(this.polarSpace.vertices[j].x, this.polarSpace.vertices[j].y);
-                                    
+        
+        for(let i = 0; i < this.polarSpace.vertices.length; i++){
+            clearPrevious(i)
         }
+
+        update()
+
+        //re-plot dots
+        // for(let j = 0; j < this.polarSpace.vertices.length; j++){
+        //     this.plotDot(this.polarSpace.vertices[j].x, this.polarSpace.vertices[j].y);                           
+        // }
         
        
     }
