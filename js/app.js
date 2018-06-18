@@ -40,8 +40,6 @@ class Canvas {
     }
 
     getDistance(x1, y1, x2, y2) {
-        // console.info(Math.abs(Math.sqrt(Math.pow(x2 - x1, 2) - Math.pow(y2 - y1, 2))))
-        
         return Math.abs(Math.sqrt(Math.pow(x2 - x1, 2) - Math.pow(y2 - y1, 2)))
     }
 
@@ -51,12 +49,10 @@ class Canvas {
         let x, y;
         
         canvas.addEventListener('mousedown', (e) => {
-
+            this.mouse.down = true;
             this.mouse.prevX = x;
             this.mouse.prevY = y;
-
             this.context.moveTo(x, y)
-            this.mouse.down = true;
             this.newShape(x, y)
         });
 
@@ -71,14 +67,12 @@ class Canvas {
             if(this.mouse.down){
                this.mouse.x = x;
                this.mouse.y = y;
-               console.log('draggin')
+        
                let dist = this.getDistance(this.mouse.prevX, this.mouse.prevY, x, y);
                this.global.shape.updateRadius(dist)
 
-                // console.log(this.getDistance(x, y, ))
-                // (e.clientX - rect.left) >= x ? 
-                // this.global.shape.updateRadius(1.03) : this.global.shape.updateRadius(.9)
-
+                //TODO: have getMousePos consume an action as an argument to perform
+                //      a variety of drawing operations.
                 // this.paint({ x: e.clientX - rect.left, y: e.clientY - rect.top });
             }
         });
