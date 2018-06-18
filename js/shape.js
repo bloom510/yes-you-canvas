@@ -5,6 +5,7 @@ class Shape {
         this.canvas = canvas;
         this.name = name;
         this.radius = 50,
+        this.diameter = 100,
         this.x = x,
         this.y = y,
         this.vertices = []
@@ -24,21 +25,23 @@ class Shape {
     createContainer(radius){
         const C = this.computeCentroid()
    
-        const diameter = (radius * 2)
+        const diameter = this.diameter;
         const x = C.x - this.radius;
         const y = C.y - this.radius;
-        
-        this.context.moveTo(x, y)
-        this.context.lineTo(x + diameter, y)
 
-        this.context.moveTo(x, y + diameter)
-        this.context.lineTo(x, y)
-
-        this.context.moveTo(x + diameter, y + diameter)
-        this.context.lineTo(x, y + diameter)
+        this.context.strokeRect(x,y,this.diameter, this.diameter);
         
-        this.context.moveTo(x + diameter, y + diameter)
-        this.context.lineTo(x + diameter, y)
+        // this.context.moveTo(x, y)
+        // this.context.lineTo(x + diameter, y)
+
+        // this.context.moveTo(x, y + diameter)
+        // this.context.lineTo(x, y)
+
+        // this.context.moveTo(x + diameter, y + diameter)
+        // this.context.lineTo(x, y + diameter)
+        
+        // this.context.moveTo(x + diameter, y + diameter)
+        // this.context.lineTo(x + diameter, y)
          
          this.context.stroke()
 
@@ -64,7 +67,7 @@ class Shape {
           this.createContainer(this.radius)
     }
 
-    updateRadius(distance){ 
+    updateRadius(scale){ 
         //had a rough minimally function version using the centroid previously
         // const C = this.computeCentroid()
 
@@ -78,8 +81,9 @@ class Shape {
 
         const update = (coords) => {       
             this.context.strokeStyle = 'white'
-            this.radius = distance;
-            this.createPolarSpace(distance)
+            this.radius = scale;
+            this.diameter = this.radius * 2;
+            this.createPolarSpace(scale)
             // this.polarSpace.vertices[coords].x = (scale * (this.polarSpace.vertices[coords].x - C.x) + C.x);
             // this.polarSpace.vertices[coords].y = (scale * (this.polarSpace.vertices[coords].y - C.y) + C.y);
         }
