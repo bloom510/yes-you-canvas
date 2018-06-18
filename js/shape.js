@@ -1,8 +1,4 @@
-/*
-Reformat Shape class to function as a robust n-gon generator
-that works by circumscribing a circle with a radius determined
-by mouse distance.
-*/
+
 class Shape {
     constructor(context, x, y, radius, name){
         this.context = context;

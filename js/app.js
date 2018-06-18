@@ -1,4 +1,3 @@
-//TODO: change scaling algorithm to respond to dragging the corner of the square, computing the new circle's radius via the square's area
 class Canvas {
     constructor(width, height) {
         this.global = {}; 
