@@ -40,13 +40,15 @@ class Canvas {
     }
 
     getDistance(x1, y1, x2, y2) {
-        return Math.sqrt(Math.pow(x2 - x1, 2) - Math.pow(y2 - y1, 2))
+        // console.info(Math.abs(Math.sqrt(Math.pow(x2 - x1, 2) - Math.pow(y2 - y1, 2))))
+        
+        return Math.abs(Math.sqrt(Math.pow(x2 - x1, 2) - Math.pow(y2 - y1, 2)))
     }
 
     getMousePos(){
         const canvas = document.getElementById('canvas')
         const rect = canvas.getBoundingClientRect();
-        let x, y, dist;
+        let x, y;
         
         canvas.addEventListener('mousedown', (e) => {
 
