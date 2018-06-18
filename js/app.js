@@ -39,7 +39,7 @@ class Canvas {
     }
 
     getDistance(x1, y1, x2, y2) {
-        return Math.abs(Math.sqrt(Math.pow(x2 - x1, 2) - Math.pow(y2 - y1, 2))) - this.global.shape.radius;
+        return Math.abs(Math.sqrt(Math.pow(x2 - x1, 2) - Math.pow(y2 - y1, 2)));
     }
 
     getMousePos(){
@@ -49,6 +49,8 @@ class Canvas {
         
         canvas.addEventListener('mousedown', (e) => {
             this.mouse.down = true;
+            this.mouse.x = x;
+            this.mouse.y = y;
             this.mouse.prevX = x;
             this.mouse.prevY = y;
             this.context.moveTo(x, y)
@@ -64,11 +66,12 @@ class Canvas {
             y = e.clientY - rect.top;
 
             if(this.mouse.down){
-               this.mouse.x = x;
-               this.mouse.y = y;
+
         
                let scale = this.getDistance(this.mouse.prevX, this.mouse.prevY, x, y);
-               this.global.shape.updateRadius(scale)
+               
+               this.global.shape.createContainer(this.global.shape.radius)
+            //    this.global.shape.updateRadius(this.global.shape.radius * scale)
 
                 //TODO: have getMousePos consume an action as an argument to perform
                 //      a variety of drawing operations.

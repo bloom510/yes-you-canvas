@@ -17,33 +17,41 @@ class Shape {
                 this.y = y;
             };
            
+        this.container = {
+            width: 0,
+            height: 0,
+            x: 0,
+            y: 0,
+            startX: 0,
+            startY: 0
+        }
         
         this.createPolarSpace(this.radius)
         
     }
     //draws a square around our circle
     createContainer(radius){
-        const C = this.computeCentroid()
-   
-        const diameter = this.diameter;
+        
+        /*TODO:
+          1. Create a container object storing its own width, height, and xy coords
+          2. Scale it according to the mouse position:
+
+            // rect.w += rect.startX-mouseX;
+            // rect.h += rect.startY-mouseY;
+            // rect.startX = mouseX;
+            // rect.startY = mouseY;
+
+        */
+
+        const C = this.computeCentroid()       
+        const diameter = (radius * 2)
         const x = C.x - this.radius;
         const y = C.y - this.radius;
 
-        this.context.strokeRect(x,y,this.diameter, this.diameter);
-        
-        // this.context.moveTo(x, y)
-        // this.context.lineTo(x + diameter, y)
-
-        // this.context.moveTo(x, y + diameter)
-        // this.context.lineTo(x, y)
-
-        // this.context.moveTo(x + diameter, y + diameter)
-        // this.context.lineTo(x, y + diameter)
-        
-        // this.context.moveTo(x + diameter, y + diameter)
-        // this.context.lineTo(x + diameter, y)
-         
-         this.context.stroke()
+        this.context.beginPath();
+        this.context.strokeRect(x, y, diameter, diameter);
+        this.context.stroke()
+        this.context.closePath();
 
     }
     //Creates nodes along the perimeter of a circle so we can subdivide and thus circumscribe polygons
@@ -67,7 +75,7 @@ class Shape {
           this.createContainer(this.radius)
     }
 
-    updateRadius(scale){ 
+    updateRadius(radius){ 
         //had a rough minimally function version using the centroid previously
         // const C = this.computeCentroid()
 
@@ -81,9 +89,8 @@ class Shape {
 
         const update = (coords) => {       
             this.context.strokeStyle = 'white'
-            this.radius = scale;
-            this.diameter = this.radius * 2;
-            this.createPolarSpace(scale)
+            // this.radius = distance;
+            this.createPolarSpace(radius)
             // this.polarSpace.vertices[coords].x = (scale * (this.polarSpace.vertices[coords].x - C.x) + C.x);
             // this.polarSpace.vertices[coords].y = (scale * (this.polarSpace.vertices[coords].y - C.y) + C.y);
         }
