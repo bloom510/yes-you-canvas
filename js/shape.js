@@ -25,39 +25,35 @@ class Shape {
             startX: 0,
             startY: 0
         }
-        
-        this.createPolarSpace(this.radius)
-        
     }
     //draws a square around our circle
     createContainer(radius){
-        
-        /*TODO:
-          1. Create a container object storing its own width, height, and xy coords
-          2. Scale it according to the mouse position:
-
-            // rect.w += rect.startX-mouseX;
-            // rect.h += rect.startY-mouseY;
-            // rect.startX = mouseX;
-            // rect.startY = mouseY;
-
-        */
-
-        const C = this.computeCentroid()       
-        const diameter = (radius * 2)
-        const x = C.x - this.radius;
-        const y = C.y - this.radius;
+   
+        const diameter = radius * 2;
+        this.container.width = diameter * 2;
+        this.container.height = diameter * 2;
+        this.container.startX = window.mouse.x - diameter;
+        this.container.startY = window.mouse.y - diameter;
 
         this.context.beginPath();
-        this.context.strokeRect(x, y, diameter, diameter);
-        this.context.stroke()
+        this.context.strokeRect(this.container.startX, this.container.startY, diameter, diameter);
+        this.context.stroke();
         this.context.closePath();
 
+
     }
+
+
     //Creates nodes along the perimeter of a circle so we can subdivide and thus circumscribe polygons
     createPolarSpace(radius){
-        for (let i = 0; i < 12; i++) {
-            let interval = (Math.PI * 2) / 12;
+
+        this.vertices = [];
+        
+        this.x = window.mouse.x - this.radius;
+        this.y = window.mouse.y; 
+
+        for (let i = 0; i < 1000; i++) {
+            let interval = (Math.PI * 2) / 1000;
             let radianAngle = interval * (i + 9);
       
             let x = Math.round(this.x + this.radius * Math.cos(radianAngle));
@@ -72,12 +68,10 @@ class Shape {
             this.plotDot(this.vertices[j].x, this.vertices[j].y);
           }
 
-          this.createContainer(this.radius)
+          this.createContainer(this.radius) //input mouse coords instead of radius
     }
 
     updateRadius(radius){ 
-        //had a rough minimally function version using the centroid previously
-        // const C = this.computeCentroid()
 
         const clearPrevious = (coords) => {
             this.context.beginPath();
@@ -89,36 +83,31 @@ class Shape {
 
         const update = (coords) => {       
             this.context.strokeStyle = 'white'
-            // this.radius = distance;
+            this.radius = radius;
             this.createPolarSpace(radius)
-            // this.polarSpace.vertices[coords].x = (scale * (this.polarSpace.vertices[coords].x - C.x) + C.x);
-            // this.polarSpace.vertices[coords].y = (scale * (this.polarSpace.vertices[coords].y - C.y) + C.y);
+
         }
 
-        
-        for(let i = 0; i < this.vertices.length; i++){
-            clearPrevious(i)
-        }
-        
+        clearPrevious()
         update()
        
     }
 
     plotDot(x, y) {
         this.context.beginPath();
-        this.context.arc(x, y, 0.5, 0, Math.PI * 2);
+        this.context.arc(x, y - this.radius, 0.5, 0, Math.PI * 2); //mouse
         this.context.stroke();
         this.context.closePath();
       }
 
     //A simple centroid finder algorithm. Should be tested on a variety of polygons to determine algorithm choice
-    computeCentroid(){
+    computeCentroid(vertices){
         let sumX = 0, sumY = 0, i = 0;
-        for(i; i < this.vertices.length; i++){
-            sumX += this.vertices[i].x;
-            sumY += this.vertices[i].y;
+        for(i; i < vertices.length; i++){
+            sumX += vertices[i].x;
+            sumY += vertices[i].y;
         }
-        const C = { x: sumX / this.vertices.length, y: sumY / this.vertices.length };
+        const C = { x: sumX / vertices.length, y: sumY / vertices.length };
         return C;    
     }
 

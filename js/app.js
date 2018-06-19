@@ -1,3 +1,5 @@
+//TODO: 
+//1.
 class Canvas {
     constructor(width, height) {
         this.global = {}; 
@@ -25,7 +27,7 @@ class Canvas {
             strokeStyle: 'white',
             fillStyle: 'black',
             lineCap: 'round',
-            lineWidth: '0.5'
+            lineWidth: '1'
         });
         this.getMousePos();
     } 
@@ -46,15 +48,14 @@ class Canvas {
         const canvas = document.getElementById('canvas')
         const rect = canvas.getBoundingClientRect();
         let x, y;
+        window.mouse = this.mouse;
         
         canvas.addEventListener('mousedown', (e) => {
             this.mouse.down = true;
-            this.mouse.x = x;
-            this.mouse.y = y;
             this.mouse.prevX = x;
             this.mouse.prevY = y;
             this.context.moveTo(x, y)
-            this.newShape(x, y)
+            this.newShape()
         });
 
         canvas.addEventListener('mouseup', () => {
@@ -64,14 +65,14 @@ class Canvas {
         canvas.addEventListener('mousemove', (e) => {
             x = e.clientX - rect.left;
             y = e.clientY - rect.top;
-
+            this.mouse.x = x;
+            this.mouse.y = y;
+          
+            // console.log(window.mouse)
             if(this.mouse.down){
-
-        
                let scale = this.getDistance(this.mouse.prevX, this.mouse.prevY, x, y);
-               
-               this.global.shape.createContainer(this.global.shape.radius)
-            //    this.global.shape.updateRadius(this.global.shape.radius * scale)
+               if(this.global.shape) this.global.shape.updateRadius(scale)
+
 
                 //TODO: have getMousePos consume an action as an argument to perform
                 //      a variety of drawing operations.
@@ -86,7 +87,8 @@ class Canvas {
     }
 
     newShape(x, y){
-        this.global.shape = new Shape(this.context, x - 50, y - 50, 50)
+        this.global.shape = new Shape(this.context, window.mouse.x - 50, window.mouse.y, 50)
+      
     }
 
 }
