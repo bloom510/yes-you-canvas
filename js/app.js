@@ -1,5 +1,4 @@
-//TODO: 
-//1.
+
 class Canvas {
     constructor(width, height) {
         this.global = {}; 
@@ -17,6 +16,8 @@ class Canvas {
     }
 
     init(params){
+        //TODO: pass in additional parameters
+
         //Create a canvas
         const canvas = document.createElement('canvas');
         canvas.id = 'canvas';
