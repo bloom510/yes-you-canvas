@@ -1,22 +1,32 @@
 
-class Shape {
+//Think of clearer namespaces for this object. 
+// Ideas: 
+class Shape { 
     constructor(context, x, y, radius, name){
         this.context = context;
         this.canvas = canvas;
         this.name = name;
-        this.radius = 50,
-        this.diameter = 100,
-        this.x = x,
-        this.y = y,
-        this.vertices = []
 
+        //Location of our sprite
+        this.x = x;
+        this.y = y;
+
+        //Vertices that make up the sprite, if any. Each has their own XY coordinates.
+        this.vertices = [];
+        
+        //Circle stuff. Consider namespacing in its own object
+        this.radius = 50;
+        this.diameter = 100;
+
+        //A classic particle. I like to think of them as nodes
         this.node = function(x, y, radius){
                 this.radius = radius;
                 this.diameter = 2*this.radius;
                 this.x = x;
                 this.y = y;
             };
-           
+
+        //A visual cue for the UI, object represents a rectangle enclosing our sprite
         this.container = {
             width: 0,
             height: 0,
@@ -26,9 +36,9 @@ class Shape {
             startY: 0
         }
     }
-    //draws a square around our circle
+
+    //draws an enclosing box around our circle
     createContainer(radius){
-   
         const diameter = radius * 2;
         this.container.width = diameter * 2;
         this.container.height = diameter * 2;
@@ -39,21 +49,19 @@ class Shape {
         this.context.strokeRect(this.container.startX, this.container.startY, diameter, diameter);
         this.context.stroke();
         this.context.closePath();
-
-
     }
 
 
-    //Creates nodes along the perimeter of a circle so we can subdivide and thus circumscribe polygons
+    //Unleashes a specified number of particles acting as nodes of connectivity into polar space
     createPolarSpace(radius){
-
+        //Omitting the deletion of previous data from vertices array (below) makes some cool paintbrush effects
         this.vertices = [];
-        
+
         this.x = window.mouse.x - this.radius;
         this.y = window.mouse.y; 
 
-        for (let i = 0; i < 1000; i++) {
-            let interval = (Math.PI * 2) / 1000;
+        for (let i = 0; i < 360; i++) {
+            let interval = (Math.PI * 2) / 12;
             let radianAngle = interval * (i + 9);
       
             let x = Math.round(this.x + this.radius * Math.cos(radianAngle));
@@ -72,7 +80,6 @@ class Shape {
     }
 
     updateRadius(radius){ 
-
         const clearPrevious = (coords) => {
             this.context.beginPath();
             this.context.clearRect(0, 0, window.innerWidth, window.innerHeight)
@@ -90,12 +97,11 @@ class Shape {
 
         clearPrevious()
         update()
-       
     }
 
     plotDot(x, y) {
         this.context.beginPath();
-        this.context.arc(x, y - this.radius, 0.5, 0, Math.PI * 2); //mouse
+        this.context.arc(x, y - this.radius, 1, 0, Math.PI * 2); //mouse
         this.context.stroke();
         this.context.closePath();
       }
